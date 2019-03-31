@@ -2,11 +2,16 @@ from flask import Flask, jsonify, request
 from google.oauth2 import service_account
 from google.cloud import vision
 from google.protobuf.json_format import MessageToDict
+# from google.appengine.ext import webapp
+# from google.appengine.ext.webapp import util
+from google.appengine.ext import webapp
+from google.appengine.ext.webapp import util
 
 import json
 import os
 import io
 import ast
+# import webapp2
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="./gcp_key.json"
 credentials = service_account.Credentials.from_service_account_file("./gcp_key.json")
@@ -29,5 +34,19 @@ def home():
     response = MessageToDict(response, preserving_proto_field_name = True)
     return jsonify(response)
 
-if __name__ == '__main__':
-    app.run(host ='0.0.0.0', port = 3333, debug = True)
+# application = webapp.WSGIApplication([('/api/gcm', Handler)],
+#                                      debug=False)
+
+class MainPage(webapp.RequestHandler):
+    def get(self):
+        self.response.headers['Content-Type'] = 'text/plain'
+        self.response.out.write('Hello, webapp World!')
+application = webapp.WSGIApplication([('/api/gcm', MainPage)],debug=True)
+
+def main():
+    application = webapp.WSGIApplication([('/foo', Handler)],
+                                         debug=False)
+    util.run_wsgi_app(application)
+
+if __name__ == "__main__":
+    main()

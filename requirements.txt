@@ -1,0 +1,7 @@
+Flask
+Werkzeug
+protobuf-schematics
+google-cloud-vision
+google-api-python-client
+google-cloud-vision
+webapp2
