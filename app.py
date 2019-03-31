@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from google.oauth2 import service_account
 from google.cloud import vision
 from google.protobuf.json_format import MessageToDict
@@ -13,8 +13,8 @@ credentials = service_account.Credentials.from_service_account_file("./gcp_key.j
 client = vision.ImageAnnotatorClient(credentials=credentials)
 app = Flask(__name__)
 
-@app.route("/api/gcm", methods=["POST"])
-def home():
+@app.route("/api/gcp", methods=["GET", "POST"])
+def two():
     data = json.loads(request.get_data().decode('utf8'))
     if not data:
         return jsonify({'failure':True})
