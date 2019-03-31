@@ -1,12 +1,14 @@
 from flask import Flask, jsonify, request
 from google.oauth2 import service_account
+from google.cloud import vision
+from google.protobuf.json_format import MessageToDict
+
 import json
 import os
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="./gcp_key.json"
 import io
-from google.cloud import vision
 import ast
-from google.protobuf.json_format import MessageToDict
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="./gcp_key.json"
 credentials = service_account.Credentials.from_service_account_file("./gcp_key.json")
 client = vision.ImageAnnotatorClient(credentials=credentials)
 app = Flask(__name__)
@@ -26,7 +28,6 @@ def home():
     labels = response.label_annotations
     response = MessageToDict(response, preserving_proto_field_name = True)
     return jsonify(response)
-
 
 if __name__ == '__main__':
     app.run(host ='0.0.0.0', port = 3333, debug = True)
